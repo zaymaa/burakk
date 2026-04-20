@@ -87,7 +87,7 @@ function App() {
           </span>
         ))}
 
-        {!open && <p className="hint">Beni seviyorsa zarfı aç 🩷</p>}
+        {!open && <p className="hint">Beni seviyorsan zarfı aç 🩷</p>}
       </div>
     </div>
   );

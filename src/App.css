@@ -1,38 +1,234 @@
-.App {
-  text-align: center;
+/* Sayfayı ortala */
+.container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+  background: transparent;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Genel sarmalayıcı */
+.envelope-wrapper {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  overflow: visible;
 }
 
-.App-link {
-  color: #61dafb;
+/* Zarf */
+.envelope {
+  width: 400px;
+  height: 260px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  perspective: 1000px;
+  position: relative;
+  z-index: 1;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.envelope:hover {
+  transform: scale(1.03);
+}
+
+/* Zarfın alt kısmı */
+.envelope::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #fdfaf6;
+  border-radius: 12px;
+  z-index: 1;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Kapak */
+.flap {
+  position: absolute;
+  inset: 0;
+  background: #f6efe7;
+  clip-path: polygon(0 0, 50% 50%, 100% 0);
+  transform-origin: top;
+  transition: transform 0.6s ease;
+  z-index: 4;
+  border-radius: 12px 12px 0 0;
+}
+
+/* Kapak açılınca */
+.envelope.open .flap {
+  transform: rotateX(180deg);
+}
+
+/* Mektup alanı */
+.letter {
+  position: absolute;
+  width: 92%;
+  height: 92%;
+  top: 4%;
+  left: 4%;
+  background: #ffffff;
+  border-radius: 12px;
+  opacity: 0;
+  transform: translateY(0);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 2;
+}
+
+/* Açılınca mektup hafif yukarı çıksın */
+.envelope.open .letter {
+  opacity: 1;
+  transform: translateY(-20px);
+}
+
+/* İçerik alanı */
+.content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Fotoğraf */
+.photo {
+  position: absolute;
+  width: 200px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 12px;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.3);
+  opacity: 0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  transition: transform 0.6s ease, opacity 0.6s ease;
+  z-index: 100;
+}
+
+/* Zarf açılınca foto yukarı çıksın */
+.envelope.open .photo {
+  opacity: 1;
+  transform: translate(-50%, -140%) scale(1.1) rotate(-3deg);
+}
+
+/* Zarf kapalıyken alt yazı */
+.envelope-text {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 25px;
+  color: #8b6f5c;
+  font-style: italic;
+  font-family: "Brush Script MT", cursive;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Zarf içindeki yazı */
+.inside-text {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  width: 82%;
+  margin: 0;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #6d5c65;
+  font-weight: 500;
+  z-index: 2;
+}
+
+/* Alt ipucu */
+.hint {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #a1866f;
+  text-align: center;
+  font-style: italic;
+  letter-spacing: 0.5px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+/* Emoji patlamaları */
+.burst-particle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0;
+  animation: flyBurst var(--d) ease-out forwards;
+  animation-delay: var(--delay);
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.12));
+}
+
+@keyframes flyBurst {
+  0% {
+    transform: translate(-50%, -50%) scale(0.4) rotate(0deg);
+    opacity: 0;
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y)))
+      scale(1.15) rotate(var(--r));
+    opacity: 0;
+  }
+}
+
+/* Tablet / küçük ekran */
+@media (max-width: 500px) {
+  .envelope {
+    width: 300px;
+    height: 200px;
+  }
+
+  .photo {
+    width: 150px;
+    height: 180px;
+  }
+
+  .envelope.open .photo {
+    transform: translate(-50%, -132%) scale(1.05) rotate(-3deg);
+  }
+
+  .envelope-text {
+    font-size: 20px;
+    bottom: 12px;
+  }
+
+  .inside-text {
+    width: 86%;
+    font-size: 13px;
+    bottom: 12px;
+    line-height: 1.4;
+  }
+
+  .hint {
+    font-size: 16px;
+    margin-top: 16px;
   }
 }
